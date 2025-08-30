@@ -155,5 +155,31 @@
     }
   </script>
 
+# AI trả lời bằng văn bản
+<script>
+  async function getAIResponse(userText) {
+    // ⚠️ Tạm demo: chưa gọi API thật, chỉ trả lời mẫu
+    const aiResponse = "Xin chào! Tôi là trợ lý AI và tôi nghe bạn nói: " + userText;
+
+    // Hiển thị trả lời trên website
+    output.innerText += "\nAI: " + aiResponse;
+
+    // 🔹 Đọc trả lời thành giọng nói
+    speak(aiResponse);
+  }
+</script>
+
+# AI trả lời bằng giọng nói - TTS
+<script>
+  function speak(text) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "vi-VN"; // đọc tiếng Việt
+    utterance.rate = 1;       // tốc độ
+    utterance.pitch = 1;      // cao độ
+
+    speechSynthesis.speak(utterance);
+  }
+</script>
+
 </body>
 </html>
