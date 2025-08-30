@@ -169,17 +169,6 @@
   }
 </script>
 
-# AI trả lời bằng giọng nói - TTS
-<script>
-  function speak(text) {
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "vi-VN"; // đọc tiếng Việt
-    utterance.rate = 1;       // tốc độ
-    utterance.pitch = 1;      // cao độ
-
-    speechSynthesis.speak(utterance);
-  }
-</script>
 
 </body>
 </html>
