@@ -3,172 +3,115 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>AI Voice Mobile</title>
+  <title>AI Voice Assistant</title>
   <style>
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
+      margin: 0; font-family: Arial, sans-serif;
+      display: flex; flex-direction: column; height: 100vh;
       background: #f9f9f9;
     }
-
-    /* Header */
     header {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      align-items: center;
-      text-align: center;
-      background: #ffffff;
-      padding: 10px;
-      border-bottom: 1px solid #ddd;
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      align-items: center; text-align: center;
+      background: #ffffff; padding: 10px; border-bottom: 1px solid #ddd;
     }
-
-    header div {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    select {
-      padding: 5px;
-      font-size: 14px;
-    }
-
-    /* Nút ghi âm lớn cho mobile */
+    header div { display: flex; justify-content: center; align-items: center; }
     .record-btn {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      border: none;
-      background: #ff5252;
-      color: white;
-      font-size: 28px;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-      transition: transform 0.2s, background 0.3s;
+      width: 70px; height: 70px; border-radius: 50%; border: none;
+      background: #ff5252; color: white; font-size: 28px; cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.2s;
     }
-
-    .record-btn:active {
-      transform: scale(0.9);
-    }
-
-    .recording {
-      background: #4CAF50 !important; /* đổi màu khi đang ghi âm */
-    }
-
-    /* Nội dung văn bản */
-    main {
-      flex: 1;
-      padding: 15px;
-      overflow-y: auto;
-      text-align: center;
-      font-size: 18px;
-    }
-
-    .text-box {
-      background: #fff;
-      padding: 15px;
-      border-radius: 12px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      max-width: 95%;
-      margin: auto;
-      text-align: left;
-    }
+    .record-btn:active { transform: scale(0.9); }
+    .recording { background: #4CAF50 !important; }
+    main { flex: 1; padding: 15px; overflow-y: auto; font-size: 18px; }
+    .text-box { background: #fff; padding: 15px; border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1); max-width: 95%; margin: auto; }
   </style>
 </head>
 <body>
 
-  <!-- Thanh trên cùng -->
-  <header>
-    <div>
-      <select id="langSelect">
-        <option value="vi-VN">Tiếng Việt</option>
-        <option value="en-US">English</option>
-        <option value="ja-JP">日本語</option>
-      </select>
-    </div>
-    <div>
-      <button id="recordBtn" class="record-btn">🎤</button>
-    </div>
-    <div>👤 User</div>
-  </header>
+<header>
+  <div>
+    <select id="langSelect">
+      <option value="vi-VN">Tiếng Việt</option>
+      <option value="en-US">English</option>
+      <option value="ja-JP">日本語</option>
+    </select>
+  </div>
+  <div><button id="recordBtn" class="record-btn">🎤</button></div>
+  <div>👤 User</div>
+</header>
 
-  <!-- Khung văn bản -->
-  <main>
-    <div id="textBox" class="text-box">
-      <p>👉 Nhấn nút 🎤 để bắt đầu nói...</p>
-    </div>
-  </main>
+<main>
+  <div id="textBox" class="text-box">
+    <p>👉 Nhấn 🎤 để nói, AI sẽ trả lời bằng giọng nói...</p>
+  </div>
+</main>
 
-  <script>
-    const recordBtn = document.getElementById("recordBtn");
-    const textBox = document.getElementById("textBox");
-    const langSelect = document.getElementById("langSelect");
-
-    let recognition;
-    if ('webkitSpeechRecognition' in window) {
-      recognition = new webkitSpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = false;
-    } else {
-      alert("⚠️ Trình duyệt của bạn không hỗ trợ nhận diện giọng nói. Hãy dùng Chrome/Edge trên Android hoặc Safari iOS 13+");
-    }
-
-    let isRecording = false;
-
-    if (recognition) {
-      recordBtn.addEventListener("click", () => {
-        if (!isRecording) {
-          recognition.lang = langSelect.value;
-          recognition.start();
-          recordBtn.classList.add("recording");
-          recordBtn.textContent = "🛑";
-          isRecording = true;
-        } else {
-          recognition.stop();
-          recordBtn.classList.remove("recording");
-          recordBtn.textContent = "🎤";
-          isRecording = false;
-        }
-      });
-
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
-        const p = document.createElement("p");
-        p.textContent = transcript;
-        textBox.appendChild(p);
-        textBox.scrollTop = textBox.scrollHeight; // cuộn xuống cuối
-      };
-
-      recognition.onerror = (event) => {
-        console.error("Lỗi:", event.error);
-        alert("Có lỗi khi ghi âm: " + event.error);
-      };
-
-      recognition.onend = () => {
-        recordBtn.classList.remove("recording");
-        recordBtn.textContent = "🎤";
-        isRecording = false;
-      };
-    }
-  </script>
-
-# AI trả lời bằng văn bản
 <script>
-  async function getAIResponse(userText) {
-    // ⚠️ Tạm demo: chưa gọi API thật, chỉ trả lời mẫu
-    const aiResponse = "Xin chào! Tôi là trợ lý AI và tôi nghe bạn nói: " + userText;
+const recordBtn = document.getElementById("recordBtn");
+const textBox = document.getElementById("textBox");
+const langSelect = document.getElementById("langSelect");
 
-    // Hiển thị trả lời trên website
-    output.innerText += "\nAI: " + aiResponse;
+let recognition;
+if ('webkitSpeechRecognition' in window) {
+  recognition = new webkitSpeechRecognition();
+  recognition.continuous = false;
+  recognition.interimResults = false;
+} else {
+  alert("⚠️ Trình duyệt không hỗ trợ SpeechRecognition. Dùng Chrome/Edge Android hoặc Safari iOS.");
+}
 
-    // 🔹 Đọc trả lời thành giọng nói
-    speak(aiResponse);
-  }
+let isRecording = false;
+
+if (recognition) {
+  recordBtn.addEventListener("click", () => {
+    if (!isRecording) {
+      recognition.lang = langSelect.value;
+      recognition.start();
+      recordBtn.classList.add("recording");
+      recordBtn.textContent = "🛑";
+      isRecording = true;
+    } else {
+      recognition.stop();
+      recordBtn.classList.remove("recording");
+      recordBtn.textContent = "🎤";
+      isRecording = false;
+    }
+  });
+
+  recognition.onresult = (event) => {
+    const userText = event.results[0][0].transcript;
+    const p = document.createElement("p");
+    p.textContent = "👤 Bạn: " + userText;
+    textBox.appendChild(p);
+
+    // --- Gọi AI trả lời (hiện demo giả lập) ---
+    const aiReply = "🤖 AI: Xin chào! Tôi vừa nghe bạn nói: " + userText;
+    const p2 = document.createElement("p");
+    p2.textContent = aiReply;
+    textBox.appendChild(p2);
+
+    // --- Đọc lại câu trả lời bằng giọng ---
+    const utterance = new SpeechSynthesisUtterance(aiReply);
+    utterance.lang = langSelect.value; // đọc theo ngôn ngữ đã chọn
+    speechSynthesis.speak(utterance);
+
+    textBox.scrollTop = textBox.scrollHeight; // tự cuộn xuống cuối
+  };
+
+  recognition.onerror = (event) => {
+    console.error("Lỗi:", event.error);
+    alert("Có lỗi khi ghi âm: " + event.error);
+  };
+
+  recognition.onend = () => {
+    recordBtn.classList.remove("recording");
+    recordBtn.textContent = "🎤";
+    isRecording = false;
+  };
+}
 </script>
-
 
 </body>
 </html>
